@@ -1,9 +1,9 @@
-from ssh_pymongo import MongoSession
-import fake_data as fd
-import pandas as pd
-import argparse
-from datetime import datetime
-import os
+from ssh_pymongo import MongoSession #conexion y manipulacion
+import fake_data as fd #modulo 
+import pandas as pd #pandas pos
+import argparse #argumento de lineas de comando a python
+from datetime import datetime  #fechas
+import os #hacer llamado de sistema
 
 #Se pueden cambiar mediante la linea de comando
 PATH_TO_RESOURCES_MAGNITUD = "resources/Magnitud.xlsx"
@@ -33,15 +33,15 @@ def main(args):
     #magnitud.columns = magnitud.columns.map(str) #Se asegura que las cols sean str
 
     m = args.magnitud
-    m=4
+    m=10
 
     try:
         tabla= "Supervisor"
-        data_supervisor = fd.fake_supervisor(5)
+        data_supervisor = fd.fake_supervisor(10)
         supervisor.insert_many(data_supervisor)
         
         tabla= "Buzo"
-        data_buzo = fd.fake_buzo(15)
+        data_buzo = fd.fake_buzo(50)
         buzo.insert_many(data_buzo)
         
         tabla= "Datalogger"
@@ -49,11 +49,11 @@ def main(args):
         datalogger.insert_many(data_datalogger)
         
         tabla= "Operacion"
-        data_operacion = fd.fake_operacion(5,fd.extract_ids(supervisor),fd.extract_ids(buzo),fd.extract_ids(datalogger),m)
+        data_operacion = fd.fake_operacion(100,fd.extract_ids(supervisor),fd.extract_ids(buzo),fd.extract_ids(datalogger),m)
         operacion.insert_many(data_operacion)
 
         tabla= "Inmersion"
-        data_inmersion = fd.fake_inmersion(5*m,fd.extract_ids(operacion),operacion,fd.extract_ids(datalogger))
+        data_inmersion = fd.fake_inmersion(200,fd.extract_ids(operacion),operacion,fd.extract_ids(datalogger))
         inmersion.insert_many(data_inmersion)
 
     except Exception as e:

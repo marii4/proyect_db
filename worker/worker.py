@@ -1,8 +1,7 @@
 from ssh_pymongo import MongoSession
-import pandas as pd
 import etl
 
-local = MongoSession(
+local = MongoSession( #darle seguridad
     "200.1.17.171",
     port=21100,
     user='wildsense',
@@ -23,6 +22,7 @@ db_cloud = cloud.connection['db-cloud']
 #print(f"Tablas DB Cloud: {db_cloud.collection_names()}")
 
 #Seccion de transformaciones
+#try: 
 etl.insert_data(db_cloud,"Supervisor",etl.get_data(db_local,"Supervisor"))
 etl.insert_data(db_cloud,"Datalogger",etl.get_data(db_local,"Datalogger"))
 
@@ -33,16 +33,10 @@ etl.insert_data(db_cloud,"Operacion",etl.get_operacion_data(operacion_data))
 inmersion_data = etl.get_data(db_local,"Inmersion")
 etl.insert_data(db_cloud,"Inmersion",etl.get_inmersion_data(inmersion_data,operacion_maestra))
 
-
-#buzo_data = etl.get_data(db_local,"Buzo")
-#supervisor_local_df = pd.DataFrame(supervisor_local.find({}))
-#Convierte el dataframe trabajado en diccionario con to_dict y lo inserta en la BD cloud
-#El parametro 'records' hace que el diccionario salga de la forma "columna: valor", que es el formato json
-#https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_dict.html
-#https://stackoverflow.com/questions/20167194/insert-a-pandas-dataframe-into-mongodb-using-pymongo
-#print(supervisor_local_df.to_dict('records'))
-#supervisor_cloud.insert_many(supervisor_local_df.to_dict())
-
-
+buzo_data = etl.get_data(db_local,"Buzo")
+etl.insert_buzo_data(db_cloud,"Buzo",etl.get_buzo_data(db_local,"Buzo",db_cloud,"Inmersion"))
+#except Exception as e:
+#    print(f'ERROR:{e}') #revisar
+#    exit()
 cloud.stop()
 local.stop()

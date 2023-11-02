@@ -61,8 +61,8 @@ def get_pressure_timeline(sample_size,low_pressure,high_pressure):
     try:
         pressure_values = [low_pressure]
         current_value = low_pressure
-        for i in range(sample_size):
-            if i>int(0.75*320):
+        for i in range(sample_size-1):
+            if i>int(0.75*sample_size):
                 current_value-=decrement*choice([0.75,1,1.2])
                 current_value = max(current_value,low_pressure)
 
@@ -78,7 +78,7 @@ def get_pressure_timeline(sample_size,low_pressure,high_pressure):
         return []
    
 
-def create_buzo_dl(data_size,buzos_ids,dataloggers_ids):
+def create_buzo_dl(data_size,buzos_ids,dataloggers_ids): #document
     buzo_dl = []
     buzos_ids = sample(buzos_ids,data_size)
     dataloggers_ids = sample(dataloggers_ids,data_size)
@@ -218,7 +218,7 @@ def fake_inmersion(data_size,operaciones_ids,operacion_table,dataloggers_ids):
     """
     try:
         seed(datetime.now().timestamp())
-        length_in_minutes = 80
+        length_in_minutes = 35
         fake = Faker("es_CL")
         new_data = []
         for i in range(data_size):
@@ -232,7 +232,7 @@ def fake_inmersion(data_size,operaciones_ids,operacion_table,dataloggers_ids):
             new_data.append(
                 {
                 #"id_buzo":buzos_ids[randint(0,len(buzos_ids)-1)],
-                "id_datalogger":dataloggers_ids[randint(0,len(dataloggers_ids)-1)],
+                "id_datalogger":dataloggers_ids[randint(0,len(dataloggers_ids)-1)], #revisar
                 "id_operacion":id_operacion,
                 #"date":start_date,
                 #"end_time": end_date,
